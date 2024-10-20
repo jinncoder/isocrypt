@@ -11,7 +11,7 @@ class Cryptsetup:
         self.device = device
 
         try:
-            self.libcryptsetup = ctypes.CDLL("/usr/lib64/libcryptsetup.so.12", use_errno=True)
+            self.libcryptsetup = ctypes.CDLL(find_library("cryptsetup"), use_errno=True)
         except OSError:
             print("Are you sure libcryptsetup is installed?")
 

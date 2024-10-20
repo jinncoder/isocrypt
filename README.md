@@ -12,7 +12,16 @@ Requires:
 ## Install
 
 ```bash
-sudo pip3 install isocrypt
+# Ubuntu 24.04
+
+sudo su -
+
+apt-get install -y udftools cryptsetup
+
+python3 -mvenv /opt/isocrypt
+pip3 --python /opt/isocrypt/venv/bin/python3 install isocrypt
+
+. /opt/isocrypt/bin/activate
 ```
 
 ## Example Usage
