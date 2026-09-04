@@ -56,9 +56,9 @@ def read_config(tmpdir: Path) -> typing.Tuple[str, str, int]:
     num_kilobytes = 0
 
     with open(f"{tmpdir}/.config") as fh:
-        ldevice = fh.readline()
-        iso = fh.readline()
-        num_kilobytes = int(fh.readline())
+        ldevice = fh.readline().strip()
+        iso = fh.readline().strip()
+        num_kilobytes = int(fh.readline().strip())
 
     return (ldevice, iso, num_kilobytes)
 
