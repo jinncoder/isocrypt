@@ -1,55 +1,46 @@
-[tool.poetry]
+[project]
 name = "isocrypt"
 version = "0.1.3"
 description = ""
-authors = ["Poe Rhiza <poerhiz@gmail.com>"]
+authors = [
+    { name = "Poe Rhiza", email = "poerhiz@gmail.com" },
+]
+requires-python = ">=3.8"
 classifiers = [
     "Operating System :: POSIX :: Linux",
 ]
+dependencies = [
+    "typer==0.27.2",
+    "humanfriendly==10.0",
+]
 
-[tool.poetry.dependencies]
-python = "^3.8"
-typer = "^0.4.0"
-humanfriendly = "^10.0"
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pre-commit",
+    "ruff",
+    "mypy",
+]
 
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
-pre-commit = "^2.16.0"
-flake8 = "^4.0.1"
-black = "^21.12b0"
-mypy = "^0.910"
-isort = "^5.10.1"
+[project.scripts]
+isocrypt = "isocrypt.main:app"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools>=81.0"]
+build-backend = "setuptools.build_meta"
 
-[tool.black]
+[tool.ruff]
 line-length = 131
-target-version = ['py38']
-include = '\.pyi?$'
-exclude = '''(
-  /(
-      \.eggs         # exclude a few common directories in the
-    | \.git          # root of the project
-    | \.hg
-    | \.mypy_cache
-    | \.tox
-    | \.venv
-    | _build
-    | buck-out
-    | build
-    | dist
-  )/
-)
-'''
+target-version = "py38"
 
-[tool.isort]
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-line_length = 131
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+]
 
-[tool.poetry.scripts]
-isocrypt = 'isocrypt.main:app'
+[tool.ruff.lint.isort]
+force-single-line = false
+force-wrap-aliases = true
+combine-as-imports = true

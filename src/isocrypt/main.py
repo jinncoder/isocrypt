@@ -15,7 +15,7 @@ from humanfriendly import format_size, parse_size  # https://humanfriendly.readt
 
 from isocrypt.libcryptsetup import Cryptsetup
 
-app = typer.Typer(help="ISO Crypt - create and mount encrypted disk images.")
+app = typer.Typer(help="ISO Crypt - create and mount encrypted disk images.", no_args_is_help=True)
 state = {"verbose": False}
 required_binary_list = [
     "cryptsetup",
@@ -63,7 +63,9 @@ def read_config(tmpdir: Path) -> typing.Tuple[str, str, int]:
     return (ldevice, iso, num_kilobytes)
 
 
-def execute_command(args: str, exit_code: int, method=subprocess.run, com_args: list = []) -> typing.Tuple[int, "subprocess.CompletedProcess[bytes]"]:  # type: ignore
+def execute_command(
+    args: str, exit_code: int, method=subprocess.run, com_args: list = []
+) -> typing.Tuple[int, "subprocess.CompletedProcess[bytes]"]:  # type: ignore
 
     if state.get("verbose", False):
         print(f"Running command: {args}")
@@ -108,7 +110,7 @@ def create(
     tmpdir = Path(f"./{volname}")
 
     if num_kilobytes < 1024 * 20:
-        typer.echo(typer.style(f"SIZE must be more than 20MB", fg=typer.colors.WHITE, bg=typer.colors.RED))
+        typer.echo(typer.style("SIZE must be more than 20MB", fg=typer.colors.WHITE, bg=typer.colors.RED))
         raise typer.Exit(code=32)
 
     if tmpdir.exists():
@@ -121,12 +123,11 @@ def create(
 
     tmpdir.mkdir(parents=True, exist_ok=False)
 
-    typer.echo(f"Creating {iso} with a size of: {format_size(num_kilobytes*1024, keep_width=True)}")
+    typer.echo(f"Creating {iso} with a size of: {format_size(num_kilobytes * 1024, keep_width=True)}")
     exit_code = 0
     ldevice = ""
 
     while True:
-
         with open(iso, "wb") as fp:
             fp.truncate(int(num_kilobytes * 1024))
 
@@ -171,7 +172,6 @@ def create(
         tmpdir.rmdir()
 
         if ldevice != "":
-
             command = subprocess.run(shlex.split(f"losetup -d {ldevice}"), capture_output=True)
             if not check_command(command):
                 exit_code = 11
@@ -239,7 +239,7 @@ def mount(
         writable=False,
         readable=True,
         resolve_path=True,
-    )
+    ),
 ) -> None:
     """
     Mount an ISO file
@@ -260,7 +260,7 @@ def close(
         writable=True,
         readable=True,
         resolve_path=True,
-    )
+    ),
 ) -> None:
     """
     Finalize an ISO file
@@ -319,13 +319,12 @@ def main(verbose: bool = typer.Option(False, "--verbose")) -> None:
         state["verbose"] = True
 
     if os.geteuid() != 0:
-        typer.echo(typer.style(f"This script must be run with root like access...", fg=typer.colors.WHITE, bg=typer.colors.RED))
+        typer.echo(typer.style("This script must be run with root like access...", fg=typer.colors.WHITE, bg=typer.colors.RED))
         raise typer.Exit(code=-1)
 
     missing_required_binary = []
 
     for required_binary in required_binary_list:
-
         if not which(required_binary):
             print("missing:", required_binary)
             missing_required_binary.append(required_binary)
